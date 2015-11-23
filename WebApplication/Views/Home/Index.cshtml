@@ -1,0 +1,26 @@
+﻿@using WebApplication.Models;
+@model ArticlesModel
+
+
+<div class="right">
+    @{
+        int i = 0;
+        foreach (var e in Model.Articles)
+        {
+            <div class="article">
+                <h2>@e.Title</h2>
+                <span><img src="@e.ImageSrc" /></span>
+                <p>@(e.Content.Length < 300 ? e.Content : e.Content.Substring(0, 300) + "...")</p>
+                <a href="@Url.Action("Article", new {index = i})" class="more-button">Read more»</a>
+            </div> i++;
+        }
+    }
+</div>
+<div class="left">
+    <h1>Recently added images</h1>
+    @foreach (var e in Model.Pictures)
+    {
+        <h2>@e.Description</h2>
+        <img src="@e.ImageSrc" alt="@e.ImageAlt" />
+    }
+</div>

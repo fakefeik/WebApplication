@@ -1,0 +1,26 @@
+﻿@using WebApplication.Models;
+@using Newtonsoft.Json
+@model GalleryModel
+
+@{
+    ViewBag.Title = "WebM Gallery";
+}
+
+@Styles.Render("~/bundles/gallery/css")
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/gallery/webm")
+<script type="text/javascript">
+    initGallery(@Html.Raw(JsonConvert.SerializeObject(Model)));
+</script>
+
+<h2>@ViewBag.Title</h2>
+<div>
+    <!-- Need to keep footer down -->
+    <div class="image-previews">
+        <img id="arrow-previous" src="~/Content/images/arrow-previous.png" />
+        @for (int i = 0; i < 6; i++)
+        {
+            <img />
+        }
+        <img id="arrow-next" src="~/Content/images/arrow-next.png" />
+    </div>

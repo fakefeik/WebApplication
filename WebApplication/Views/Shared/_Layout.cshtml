@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8">
+    @Styles.Render("~/Bundles/Default/css")
+</head>
+<body>
+    <div class="content">
+        <div class="logo">
+            <img src="~/Content/images/yoba.png" alt="logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                <li><a href="@Url.Action("Gallery", "Home")">Gallery</a></li>
+                <li><a href="@Url.Action("Forum", "Home")">Forum</a></li>
+                <li><a href="@Url.Action("About", "Home")">About</a></li>
+            </ul>
+        </nav>
+        <div class="inner">
+            @RenderBody()
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <footer class="footer">
+        &copy; @DateTime.Now.Year - Yet another useless site
+    </footer>
+</body>
+</html>
