@@ -144,6 +144,7 @@ The “being in the shadow” test is actually quite simple. If the current samp
             return View(model);
         }
 
+		[Authorize]
         public ActionResult Forum()
         {
             return View();

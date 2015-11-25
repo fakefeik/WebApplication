@@ -1,4 +1,5 @@
-﻿@using WebApplication.Models;
+﻿@using Microsoft.AspNet.Identity
+@using WebApplication.Models;
 @model ArticlesModel
 
 
@@ -17,10 +18,23 @@
     }
 </div>
 <div class="left">
-    <h1>Recently added images</h1>
-    @foreach (var e in Model.Pictures)
-    {
-        <h2>@e.Description</h2>
-        <img src="@e.ImageSrc" alt="@e.ImageAlt" />
-    }
+	<h1>Recently added images</h1>
+	@foreach (var e in Model.Pictures)
+	{
+		<h2>@e.Description</h2>
+		<img src="@e.ImageSrc" alt="@e.ImageAlt"/>
+	}
 </div>
+@User.Identity.Name
+
+ @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new {id = "logoutForm", @class = "navbar-right"}))
+ {
+	 @Html.AntiForgeryToken()
+
+	 <ul class="nav navbar-nav navbar-right">
+		 <li>
+			 @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new {title = "Manage"})
+		 </li>
+		 <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+	 </ul>
+ }
