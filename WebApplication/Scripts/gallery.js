@@ -3,6 +3,7 @@ var imagesSmall;
 var maxImages;
 var isLarge = false;
 var isVideo = false;
+var volume = 0.5;
 var startIndex = 0;
 
 function initGallery(model) {
@@ -19,15 +20,19 @@ function indexOf(arr, x) {
     return -1;
 }
 
+function volumeChanged() {
+    volume = $("#image-large").prop("volume");
+}
+
 function getVideoWithSource(src) {
-    return  "<video id='image-large' controls loop='1' autoplay height='100%' width='100%'>" +
+    return  "<video id='image-large' controls loop='1' autoplay height='100%' width='100%' volume='" + volume + "' onvolumechange='volumeChanged();'>" +
                 "<source height='100%' width='100%' type='video/webm' src='" + src + "' >" +
             "</video>";
 }
 
 function getPhotoWithSource(src) {
-    return "<img id='image-large' src='" + src + "' onload='photoLoaded();' style='visibility: hidden;'/>" +
-        "<img id='loading' src='/Content/images/loading.gif' />";
+    return  "<img id='image-large' src='" + src + "' onload='photoLoaded();' style='visibility: hidden;'/>" +
+            "<img id='loading' src='/Content/images/loading.gif' />";
 }
 
 function preload(arrayOfImages) { 
@@ -61,6 +66,8 @@ function switchPhoto(delta) {
     $("#over-overlay").append(isVideo ? getVideoWithSource(images[nextImage]) : getPhotoWithSource(images[nextImage]));
     imageLarge.css("visibility", "hidden");
     imageLarge.attr("src", images[indexOf(images, imageLarge.attr("src")) + delta]);
+    if (isVideo)
+        $("#image-large").prop("volume", volume);
 }
 
 function closeOverlay() {
@@ -104,6 +111,9 @@ $(document).ready(function () {
 				"<img id='close' src='/Content/images/close-icon.png' />" +
 			"</div>"
 		);
+
+        if (isVideo)
+            $("#image-large").prop("volume", volume);
 
         $("#overlay").click(closeOverlay);
         $("#close").click(closeOverlay);
