@@ -36,9 +36,6 @@ namespace WebApplication
 
             bundles.Add(new ScriptBundle("~/bundles/gallery/js").Include(
                       "~/Scripts/gallery.js"));
-
-            bundles.Add(new ScriptBundle("~/bundles/gallery/webm").Include(
-                      "~/Scripts/webm.js"));
         }
     }
 }

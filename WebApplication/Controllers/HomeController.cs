@@ -136,6 +136,7 @@ The “being in the shadow” test is actually quite simple. If the current samp
             }
             var model = new GalleryModel
             {
+                IsVideo = true,
                 MaxImages = 6,
                 Images = webms.ToArray(),
                 ImagePreviews = previews.ToArray()
