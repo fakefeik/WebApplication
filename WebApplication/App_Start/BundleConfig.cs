@@ -27,6 +27,9 @@ namespace WebApplication
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
 
+			bundles.Add(new ScriptBundle("~/Content/js").Include(
+                      "~/Scripts/site.js"));
+
             bundles.Add(new StyleBundle("~/bundles/Default/css").Include(
                       "~/Content/reset.css",
                       "~/Content/default.css"));

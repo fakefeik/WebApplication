@@ -14,6 +14,7 @@ namespace WebApplication.Controllers
     {
         private BoardsRepo boards = new BoardsRepo();
         private ThreadsRepo threads = new ThreadsRepo();
+		private PostsRepo posts = new PostsRepo();
 
 
         // GET: Forum
@@ -29,20 +30,38 @@ namespace WebApplication.Controllers
             return new JsonResult() {Data = "{'status': 'OK'}"};
         }
 
-        public async Task<ActionResult> AddThread(string boardId, string name, string text)
+		[HttpPost]
+        public async Task<ActionResult> AddThread(int boardId, string name, string text)
         {
             await threads.AddThread(new ThreadModel {BoardId = boardId, Text = text, Topic = name});
-            return new JsonResult {Data = "{'status': 'OK'}"};
+			return new JsonResult() { Data = "{'status': 'OK'}" };
+		}
+
+	    [HttpPost]
+	    public async Task<ActionResult> AddPost(int threadId, string name, string text)
+	    {
+		    await posts.AddPost(new PostModel
+		    {
+				ThreadId = threadId,
+				Topic = name,
+				Text = text
+		    });
+			return new JsonResult() { Data = "{'status': 'OK'}" };
+		}
+
+        public async Task<ActionResult> Board(int boardId)
+        {
+	        var board = await boards.GetBoard(boardId);
+	        board.Threads = threads.GetThreads(boardId);
+	        return View(board);
         }
 
-        public ActionResult Board(string boardId)
+        public async Task<ActionResult> Thread(int threadId)
         {
-            return View(threads.GetThreads(boardId));
-        }
-
-        public ActionResult Thread(string threadId)
-        {
-            return View();
+	        var thread = threads.GetThread(threadId);
+	        thread.Posts = posts.GetPosts(threadId);
+	        thread.BoardName = (await boards.GetBoard(thread.BoardId)).Name;
+            return View(thread);
         }
     }
 }

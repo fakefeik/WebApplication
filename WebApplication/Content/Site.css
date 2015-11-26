@@ -22,3 +22,11 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.clickable {
+	cursor: pointer;
+}
+
+.list-group-item-head {
+	background-color: #c0c0c0;
+}

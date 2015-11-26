@@ -20,7 +20,6 @@ namespace WebApplication.Models
         [StringLength(200)]
         public string Text { get; set; }
 
-        [StringLength(64)]
-        public string ThreadId { get; set; }
+        public int ThreadId { get; set; }
     }
 }

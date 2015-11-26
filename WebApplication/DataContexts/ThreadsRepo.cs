@@ -26,9 +26,14 @@ namespace WebApplication.DataContexts
             await db.SaveChangesAsync();
         }
 
-        public IEnumerable<ThreadModel> GetThreads(string boardId)
+        public IEnumerable<ThreadModel> GetThreads(int boardId)
         {
             return db.Threads.Where(x => x.BoardId == boardId);
         }
+
+	    public ThreadModel GetThread(int threadId)
+	    {
+		    return db.Threads.Find(threadId);
+	    }
     }
 }

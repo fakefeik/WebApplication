@@ -1,8 +1,34 @@
-﻿@model dynamic
+﻿@model WebApplication.Models.ThreadModel
 
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+	ViewBag.Title = @Model.BoardName + " - " +  Model.Topic;
+	Layout = "~/Views/Shared/_ForumLayout.cshtml";
 }
 
-<h2>title</h2>
+<a href="@Url.Action("Board", new {boardId = Model.BoardId})">Back</a>
+
+<div class="list-group-item list-group-item-head clickable" data-link="#">
+	<h4>@Model.Topic</h4>
+	<p>@Model.Text</p>
+	<br/>
+</div>
+
+@foreach (var p in Model.Posts)
+{
+	<div class="list-group-item clickable" data-link="#">
+		<h4>@p.Topic</h4>
+		<p>@p.Text</p>
+	</div>
+}
+
+
+@using (Html.BeginForm("AddPost", "Forum", FormMethod.Post))
+{
+	<h2>Add post:</h2>
+	<input type="hidden" name="threadId" value="@Model.Id" />
+	<p>Title:</p>
+	<input class="form-control" type="text" name="name" /><br />
+	<p>Message:</p>
+	<input class="form-control" type="text" name="text" /><br />
+	<input class="btn btn-success" type="submit" />
+}

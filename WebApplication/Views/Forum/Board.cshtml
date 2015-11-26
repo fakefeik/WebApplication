@@ -1,13 +1,31 @@
-﻿@model IEnumerable<WebApplication.Models.ThreadModel>
+﻿@model WebApplication.Models.BoardModel
 
 @{
-    ViewBag.Title = "title";
+	ViewBag.Title = @Model.Name;
     Layout = "~/Views/Shared/_ForumLayout.cshtml";
 }
 
-@foreach (var t in Model)
+<a href="@Url.Action("Index")">Back</a>
+
+@foreach (var t in Model.Threads)
 {
-    <h5>@t.Topic</h5>
-    <p>@t.Text</p>
-    <br/>
+	<div class="list-group-item clickable" data-link="@Url.Action("Thread", "Forum", new { threadId = t.Id })">
+		<h4>@t.Topic</h4>
+		<p>@t.Text</p>
+		<br/>
+	</div>
 }
+<hr/>
+@*@if (User.Identity.IsAuthenticated)*@
+	@*//{*@
+	@using (Html.BeginForm("AddThread", "Forum", FormMethod.Post))
+	{
+		<h2>Add thread:</h2>
+		<input type="hidden" name="boardId"value="@Model.Id"/>
+		<p>Title:</p>
+		<input class="form-control" type="text" name="name"/><br/>
+		<p>Message:</p>
+		<input class="form-control" type="text" name="text" /><br />
+		<input class="btn btn-success" type="submit" />
+	}
+@*  }*@

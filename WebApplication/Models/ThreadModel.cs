@@ -19,7 +19,9 @@ namespace WebApplication.Models
         [StringLength(200)]
         public string Text { get; set; }
 
-        [StringLength(64)]
-        public string BoardId { get; set; }
+        public int BoardId { get; set; }
+
+	    public IEnumerable<PostModel> Posts;
+	    public string BoardName;
     }
 }
