@@ -1,0 +1,13 @@
+﻿@model IEnumerable<WebApplication.Models.ThreadModel>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "~/Views/Shared/_ForumLayout.cshtml";
+}
+
+@foreach (var t in Model)
+{
+    <h5>@t.Topic</h5>
+    <p>@t.Text</p>
+    <br/>
+}

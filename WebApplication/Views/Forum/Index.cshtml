@@ -1,0 +1,23 @@
+﻿@using Microsoft.AspNet.Identity
+@model IEnumerable<WebApplication.Models.BoardModel>
+
+@{
+    ViewBag.Title = "Forum";
+    Layout = "~/Views/Shared/_ForumLayout.cshtml";
+}
+
+@foreach (var b in Model)
+{
+    <a href="@Url.Action("Board", "Forum", new {boardId = b.Id})">@b.Name</a><br/>
+}
+
+@*@User.IsInRole("Admin") 
+{*@
+    @using (Html.BeginForm("AddBoard", "Forum", FormMethod.Post))
+    {
+        <h2>Add board:</h2>
+        <p>Short name</p>
+        <input class="form-control" type="text" name="name"/><br/>
+        <input class="btn btn-success" type="submit" />
+    }
+@*  }*@
