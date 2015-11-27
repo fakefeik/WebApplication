@@ -12,7 +12,10 @@ namespace WebApplication.Models
         [Key]
         public int Id { get; set; }
 
-        public ApplicationUser User { get; set; }
+		[StringLength(128)]
+		public string UserId { get; set; }
+
+	    public string Username;
 
         [StringLength(32)]
         public string Topic { get; set; }

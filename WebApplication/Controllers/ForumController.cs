@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using Newtonsoft.Json;
 using WebApplication.DataContexts;
 using WebApplication.Models;
@@ -14,30 +16,38 @@ namespace WebApplication.Controllers
 {
     public class ForumController : Controller
     {
-        private BoardsRepo boards = new BoardsRepo();
-        private ThreadsRepo threads = new ThreadsRepo();
-		private PostsRepo posts = new PostsRepo();
+		public ApplicationUserManager UserManager => Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+		private readonly BoardsRepo _boards = new BoardsRepo();
+        private readonly ThreadsRepo _threads = new ThreadsRepo();
+		private readonly PostsRepo _posts = new PostsRepo();
 
-
-        // GET: Forum
+	    // GET: Forum
         public ActionResult Index()
         {
-            return View(boards.GetBoards());
+            return View(_boards.GetBoards());
         }
 
         [HttpPost]
         public async Task<ActionResult> AddBoard(string shortName, string name)
         {
-            await boards.AddBoard(new BoardModel { ShortName = shortName, Name = name });
-            return new JsonResult {Data = "{'status': 'OK'}"};
+            await _boards.AddBoard(new BoardModel { ShortName = shortName, Name = name });
+	        return RedirectToAction("Index");
         }
 
 		[HttpPost]
         public async Task<ActionResult> AddThread(string boardId, string name, string text)
         {
-            var thread = await threads.AddThread(new ThreadModel {BoardId = boardId});
-		    await posts.AddPost(new PostModel {ThreadId = thread.Id, Text = text, Topic = name, Timestamp = DateTime.Now});
-			return new JsonResult() { Data = "{'status': 'OK'}" };
+            var thread = await _threads.AddThread(new ThreadModel {BoardId = boardId});
+			var uid = User.Identity.GetUserId();
+		    await _posts.AddPost(new PostModel
+		    {
+			    ThreadId = thread.Id,
+				Text = text,
+				Topic = name,
+				Timestamp = DateTime.Now,
+				UserId = User.Identity.GetUserId()
+		    });
+			return RedirectToAction("Board", new { boardId = boardId });
 		}
 
 	    [HttpPost]
@@ -53,33 +63,46 @@ namespace WebApplication.Controllers
             //when response is false check for the error message
             if (!captchaResponse.Success)
             {
-                if (captchaResponse.ErrorCodes.Count <= 0)
-                    return new JsonResult() { Data = "{'status': 'Not ok'}" };
+                //if (captchaResponse.ErrorCodes.Count <= 0)
+                //    return RedirectToAction("Thread", new { threadId = threadId });
 
-                var error = captchaResponse.ErrorCodes[0].ToLower();
-                return new JsonResult() {Data = "{'status': '" + error + "'}"};
+				//var error = captchaResponse.ErrorCodes[0].ToLower();
+	            return RedirectToAction("Thread", new { threadId = threadId });
             }
-            await posts.AddPost(new PostModel
+            await _posts.AddPost(new PostModel
 		    {
 				ThreadId = threadId,
 				Topic = name,
-				Text = text
-		    });
-			return new JsonResult() { Data = "{'status': 'OK'}" };
+				Text = text,
+				Timestamp = DateTime.Now,
+				UserId = User.Identity.GetUserId()
+			});
+			return RedirectToAction("Thread", new { threadId = threadId });
 		}
 
         public async Task<ActionResult> Board(string boardId)
         {
-	        var board = await boards.GetBoard(boardId);
-	        board.Threads = threads.GetThreads(boardId);
+	        var board = await _boards.GetBoard(boardId);
+	        var threads = _threads.GetThreads(boardId).ToList();
+	        for (int i = 0; i < threads.Count; i++)
+	        {
+		        var posts = _posts.GetPosts(threads[i].Id).ToList();
+		        for (int j = 0; j < posts.Count; j++)
+		        {
+			        var users = UserManager.Users.ToList();
+                    posts[j].Username = users.FirstOrDefault(x => x.Id == posts[j].UserId)?.UserName;
+		        }
+		        threads[i].Posts = posts;
+	        }
+	        board.Threads = threads;
 	        return View(board);
         }
 
         public async Task<ActionResult> Thread(int threadId)
         {
-	        var thread = threads.GetThread(threadId);
-	        thread.Posts = posts.GetPosts(threadId);
-	        thread.BoardName = (await boards.GetBoard(thread.BoardId)).Name;
+	        var thread = _threads.GetThread(threadId);
+	        thread.Posts = _posts.GetPosts(threadId);
+	        thread.BoardName = (await _boards.GetBoard(thread.BoardId)).Name;
             return View(thread);
         }
     }

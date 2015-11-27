@@ -189,21 +189,17 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201511251712241_Initial.cs" />
-    <Compile Include="Migrations\201511251712241_Initial.Designer.cs">
-      <DependentUpon>201511251712241_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201511271838424_Initial.cs" />
+    <Compile Include="Migrations\201511271838424_Initial.Designer.cs">
+      <DependentUpon>201511271838424_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201511260853252_ForumStuff.cs" />
-    <Compile Include="Migrations\201511260853252_ForumStuff.Designer.cs">
-      <DependentUpon>201511260853252_ForumStuff.cs</DependentUpon>
+    <Compile Include="Migrations\201511272000432_AddUserId.cs" />
+    <Compile Include="Migrations\201511272000432_AddUserId.Designer.cs">
+      <DependentUpon>201511272000432_AddUserId.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201511260920574_ForumStuff1.cs" />
-    <Compile Include="Migrations\201511260920574_ForumStuff1.Designer.cs">
-      <DependentUpon>201511260920574_ForumStuff1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201511271016509_ChangeBoardId.cs" />
-    <Compile Include="Migrations\201511271016509_ChangeBoardId.Designer.cs">
-      <DependentUpon>201511271016509_ChangeBoardId.cs</DependentUpon>
+    <Compile Include="Migrations\201511272026449_IncreaseUserIdLength.cs" />
+    <Compile Include="Migrations\201511272026449_IncreaseUserIdLength.Designer.cs">
+      <DependentUpon>201511272026449_IncreaseUserIdLength.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\MySqlHistoryContext.cs" />
@@ -327,21 +323,18 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201511251712241_Initial.resx">
-      <DependentUpon>201511251712241_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201511260853252_ForumStuff.resx">
-      <DependentUpon>201511260853252_ForumStuff.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201511260920574_ForumStuff1.resx">
-      <DependentUpon>201511260920574_ForumStuff1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201511271016509_ChangeBoardId.resx">
-      <DependentUpon>201511271016509_ChangeBoardId.cs</DependentUpon>
-    </EmbeddedResource>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
+    <EmbeddedResource Include="Migrations\201511271838424_Initial.resx">
+      <DependentUpon>201511271838424_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511272000432_AddUserId.resx">
+      <DependentUpon>201511272000432_AddUserId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511272026449_IncreaseUserIdLength.resx">
+      <DependentUpon>201511272026449_IncreaseUserIdLength.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -11,8 +11,6 @@ namespace WebApplication.Models
         [Key]
         public int Id { get; set; }
 
-        public ApplicationUser User;
-
         public string BoardId { get; set; }
 
 	    public IEnumerable<PostModel> Posts;

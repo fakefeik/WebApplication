@@ -11,9 +11,9 @@
 @foreach (var p in Model.Posts.Select((e, i) => new {Index = i, Post = e}))
 {
     @Html.Raw(p.Index == 0
-        ? "<div class='list - group - item list - group - item - head clickable' data-link='#'>"
-        : "<div class='list - group - item clickable' data-link='#'>")
-    <p>@p.Post.User.UserName</p>
+        ? "<div class='list-group-item list-group-item-head clickable' data-link='#'>"
+        : "<div class='list-group-item clickable' data-link='#'>")
+    <p>@p.Post.Username</p>
     <p>@p.Post.Id</p>
     <p>@p.Post.Timestamp</p>
     <p>@p.Post.Topic</p>
