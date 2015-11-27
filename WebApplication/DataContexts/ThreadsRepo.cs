@@ -20,13 +20,14 @@ namespace WebApplication.DataContexts
             this.db = db;
         }
 
-        public async Task AddThread(ThreadModel thread)
+        public async Task<ThreadModel> AddThread(ThreadModel thread)
         {
-            db.Threads.Add(thread);
+            var added = db.Threads.Add(thread);
             await db.SaveChangesAsync();
+            return added;
         }
 
-        public IEnumerable<ThreadModel> GetThreads(int boardId)
+        public IEnumerable<ThreadModel> GetThreads(string boardId)
         {
             return db.Threads.Where(x => x.BoardId == boardId);
         }

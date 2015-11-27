@@ -16,16 +16,18 @@
 	</div>
 }
 <hr/>
-@*@if (User.Identity.IsAuthenticated)*@
-	@*//{*@
-	@using (Html.BeginForm("AddThread", "Forum", FormMethod.Post))
-	{
-		<h2>Add thread:</h2>
-		<input type="hidden" name="boardId"value="@Model.Id"/>
-		<p>Title:</p>
-		<input class="form-control" type="text" name="name"/><br/>
-		<p>Message:</p>
-		<input class="form-control" type="text" name="text" /><br />
-		<input class="btn btn-success" type="submit" />
-	}
-@*  }*@
+@if (User.Identity.IsAuthenticated)
+{
+    using (Html.BeginForm("AddThread", "Forum", FormMethod.Post))
+    {
+        <h2>Add thread:</h2>
+        <input type="hidden" name="boardId" value="@Model.ShortName"/>
+        <p>Title:</p>
+        <input class="form-control" type="text" name="name"/>
+        <br/>
+        <p>Message:</p>
+        <input class="form-control" type="text" name="text"/>
+        <br/>
+        <input class="btn btn-success" type="submit"/>
+    }
+}

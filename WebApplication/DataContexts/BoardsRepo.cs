@@ -27,7 +27,7 @@ namespace WebApplication.DataContexts
             return db.Boards;
         }
 
-	    public async Task<BoardModel> GetBoard(int boardId)
+	    public async Task<BoardModel> GetBoard(string boardId)
 	    {
 		    return await db.Boards.FindAsync(boardId);
 	    }

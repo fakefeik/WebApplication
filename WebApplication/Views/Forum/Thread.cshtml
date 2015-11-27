@@ -1,34 +1,40 @@
 ﻿@model WebApplication.Models.ThreadModel
 
 @{
-	ViewBag.Title = @Model.BoardName + " - " +  Model.Topic;
+    var firstMessage = Model.Posts.First();
+	ViewBag.Title = @Model.BoardName + " - " +  firstMessage.Topic;
 	Layout = "~/Views/Shared/_ForumLayout.cshtml";
 }
 
 <a href="@Url.Action("Board", new {boardId = Model.BoardId})">Back</a>
 
-<div class="list-group-item list-group-item-head clickable" data-link="#">
-	<h4>@Model.Topic</h4>
-	<p>@Model.Text</p>
-	<br/>
-</div>
-
-@foreach (var p in Model.Posts)
+@foreach (var p in Model.Posts.Select((e, i) => new {Index = i, Post = e}))
 {
-	<div class="list-group-item clickable" data-link="#">
-		<h4>@p.Topic</h4>
-		<p>@p.Text</p>
-	</div>
+    @Html.Raw(p.Index == 0
+        ? "<div class='list - group - item list - group - item - head clickable' data-link='#'>"
+        : "<div class='list - group - item clickable' data-link='#'>")
+    <p>@p.Post.User.UserName</p>
+    <p>@p.Post.Id</p>
+    <p>@p.Post.Timestamp</p>
+    <p>@p.Post.Topic</p>
+    <p>@p.Post.Text</p>
+	@Html.Raw("</div>")
 }
 
-
-@using (Html.BeginForm("AddPost", "Forum", FormMethod.Post))
+@if (User.Identity.IsAuthenticated)
 {
-	<h2>Add post:</h2>
-	<input type="hidden" name="threadId" value="@Model.Id" />
-	<p>Title:</p>
-	<input class="form-control" type="text" name="name" /><br />
-	<p>Message:</p>
-	<input class="form-control" type="text" name="text" /><br />
-	<input class="btn btn-success" type="submit" />
+    using (Html.BeginForm("AddPost", "Forum", FormMethod.Post))
+    {
+        <h2>Add post:</h2>
+        <input type="hidden" name="threadId" value="@Model.Id"/>
+        <p>Title:</p>
+        <input class="form-control" type="text" name="name"/>
+        <br/>
+        <p>Message:</p>
+        <input class="form-control" type="text" name="text"/>
+        <br/>
+        <div class="g-recaptcha" data-sitekey="6LfW4hETAAAAACXIgEY_L8lanGrNSHMDr0aSD1Pb"></div>
+        <br/>
+        <input class="btn btn-success" type="submit"/>
+    }
 }
