@@ -24,11 +24,11 @@ namespace WebApplication.Models
         public DbSet<ThreadModel> Threads { get; set; }
         public DbSet<PostModel> Posts { get; set; }
 
-    public ApplicationDbContext()
+        public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
             Database.SetInitializer(new MySqlInitializer());
-		}
+        }
 
         public static ApplicationDbContext Create()
         {

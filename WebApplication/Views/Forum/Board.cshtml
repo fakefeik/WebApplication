@@ -1,7 +1,7 @@
 ﻿@model WebApplication.Models.BoardModel
 
 @{
-	ViewBag.Title = @Model.Name;
+    ViewBag.Title = @Model.Name;
     Layout = "~/Views/Shared/_ForumLayout.cshtml";
 }
 
@@ -9,18 +9,18 @@
 
 @foreach (var t in Model.Threads)
 {
-	if (!t.Posts.Any())
-	{
-		continue;
-	}
-	var threadStart = t.Posts.First();
-	<div class="list-group-item clickable" data-link="@Url.Action("Thread", "Forum", new { threadId = t.Id })">
-		<p>@threadStart.Username</p>
-		<p>@threadStart.Id</p>
-		<p>@threadStart.Timestamp</p>
-		<p>@threadStart.Topic</p>
-		<p>@threadStart.Text</p>
-	</div>
+    if (!t.Posts.Any())
+    {
+        continue;
+    }
+    var threadStart = t.Posts.First();
+    <div class="list-group-item clickable" data-link="@Url.Action("Thread", "Forum", new { threadId = t.Id })">
+        <p>@threadStart.Username</p>
+        <p>@threadStart.Id</p>
+        <p>@threadStart.Timestamp</p>
+        <p>@threadStart.Topic</p>
+        <p>@threadStart.Text</p>
+    </div>
 }
 <hr/>
 @if (User.Identity.IsAuthenticated)
@@ -34,6 +34,8 @@
         <br/>
         <p>Message:</p>
         <input class="form-control" type="text" name="text"/>
+        <br/>
+        <div class="g-recaptcha" data-sitekey="6LfW4hETAAAAACXIgEY_L8lanGrNSHMDr0aSD1Pb"></div>
         <br/>
         <input class="btn btn-success" type="submit"/>
     }

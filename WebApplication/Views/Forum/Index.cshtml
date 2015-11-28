@@ -11,10 +11,10 @@
     <a href="@Url.Action("Board", "Forum", new {boardId = b.ShortName})">@string.Format("/{0}/ - {1}", b.ShortName, b.Name)</a><br/>
 }
 
-@if (User.Identity.IsAuthenticated)
+@if (User.IsInRole("Admin"))
 {
-	using (Html.BeginForm("AddBoard", "Forum", FormMethod.Post))
-	{
+    using (Html.BeginForm("AddBoard", "Forum", FormMethod.Post))
+    {
         <h2>Add board:</h2>
         <p>Short name</p>
         <input class="form-control" type="text" name="shortName" /><br />
