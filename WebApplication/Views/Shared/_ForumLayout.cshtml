@@ -22,20 +22,16 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="@Url.Action("Index", "Home")">Main</a>
+
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    @if (User.Identity.IsAuthenticated)
+                    @if (User.IsInRole("Admin"))
                     {
-                        <li><a href="@Url.Action("Index", "Manage")">Hi, @User.Identity.Name</a></li>
-                        <li><a href="#">Log off</a></li>
-                    }
-                    else
-                    {
-                        <li><a href="@Url.Action("Login", "Account")">Log in</a></li>
-                        <li><a href="@Url.Action("Register", "Account")">Register</a></li>
+                        <li><a href="@Url.Action("Users", "Forum")">Users</a></li>
                     }
                 </ul>
+                @Html.Partial("_LoginPartial")
             </div>
         </div>
         @RenderBody()

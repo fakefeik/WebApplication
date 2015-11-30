@@ -310,6 +310,7 @@
     <Content Include="Views\Forum\Index.cshtml" />
     <Content Include="Views\Forum\Board.cshtml" />
     <Content Include="Views\Forum\Thread.cshtml" />
+    <Content Include="Views\Forum\Users.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

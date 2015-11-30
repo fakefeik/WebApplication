@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,6 +47,16 @@ namespace WebApplication.DataContexts
                         e.EntityValidationErrors.SelectMany(v => v.ValidationErrors)
                             .Select(err => err.PropertyName + " " + err.ErrorMessage)));
             }
+        }
+
+        public async Task DeleteBoard(string boardId)
+        {
+            var threads = db.Threads.Where(t => t.BoardId == boardId).ToList();
+            var posts = db.Posts.Where(p => threads.Any(t => t.Id == p.ThreadId));
+            db.Posts.RemoveRange(posts);
+            db.Threads.RemoveRange(threads);
+            db.Boards.Remove(db.Boards.Find(boardId));
+            await db.SaveChangesAsync();
         }
     }
 }

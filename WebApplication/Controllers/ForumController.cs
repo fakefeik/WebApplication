@@ -4,8 +4,10 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.WebSockets;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
 using Newtonsoft.Json;
 using WebApplication.DataContexts;
 using WebApplication.Models;
@@ -14,7 +16,7 @@ namespace WebApplication.Controllers
 {
     public class ForumController : Controller
     {
-        public ApplicationUserManager UserManager => Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+        private ApplicationUserManager UserManager => Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
         private readonly BoardsRepo _boards = new BoardsRepo();
         private readonly ThreadsRepo _threads = new ThreadsRepo();
         private readonly PostsRepo _posts = new PostsRepo();
@@ -31,6 +33,31 @@ namespace WebApplication.Controllers
         {
             await _boards.AddBoard(new BoardModel { ShortName = shortName, Name = name });
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> DeleteBoard(string boardId)
+        {
+            await _boards.DeleteBoard(boardId);
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> DeleteThread(int threadId)
+        {
+            var boardId = _threads.GetThread(threadId).BoardId;
+            await _threads.DeleteThread(threadId);
+            return RedirectToAction("Board", new {boardId = boardId});
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult> DeletePost(int threadId, int postId)
+        {
+            await _posts.DeletePost(postId);
+            return RedirectToAction("Thread", new {threadId = threadId});
         }
 
         private bool CheckCaptcha()
@@ -61,7 +88,7 @@ namespace WebApplication.Controllers
         [Authorize]
         public async Task<ActionResult> AddThread(string boardId, string name, string text)
         {
-            if (!CheckCaptcha())
+            if (!CheckCaptcha() && !User.IsInRole("Admin"))
                 return RedirectToAction("Board", new { boardId = boardId });
 
             var thread = await _threads.AddThread(new ThreadModel { BoardId = boardId });
@@ -80,7 +107,7 @@ namespace WebApplication.Controllers
         [Authorize]
         public async Task<ActionResult> AddPost(int threadId, string name, string text)
         {
-            if (!CheckCaptcha())
+            if (!CheckCaptcha() && !User.IsInRole("Admin"))
                 return RedirectToAction("Thread", new { threadId = threadId });
 
             await _posts.AddPost(new PostModel
@@ -101,7 +128,7 @@ namespace WebApplication.Controllers
             foreach (var thread in threads)
             {
                 var posts = _posts.GetPosts(thread.Id).ToList();
-                foreach (var post in posts)
+                foreach (var post in posts.Take(1))
                     post.Username = UserManager.Users
                         .ToList()
                         .FirstOrDefault(x => x.Id == post.UserId)
@@ -115,9 +142,21 @@ namespace WebApplication.Controllers
         public async Task<ActionResult> Thread(int threadId)
         {
             var thread = _threads.GetThread(threadId);
-            thread.Posts = _posts.GetPosts(threadId);
+            var posts = _posts.GetPosts(thread.Id).ToList();
+            foreach (var post in posts)
+                post.Username = UserManager.Users
+                    .ToList()
+                    .FirstOrDefault(x => x.Id == post.UserId)
+                    ?.UserName;
+            thread.Posts = posts;
             thread.BoardName = (await _boards.GetBoard(thread.BoardId)).Name;
             return View(thread);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult Users()
+        {
+            return View(UserManager.Users);
         }
     }
 }

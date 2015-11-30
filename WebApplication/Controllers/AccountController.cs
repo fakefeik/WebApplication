@@ -395,6 +395,20 @@ namespace WebApplication.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult> DeleteUser(string userId)
+        {
+            if (!User.IsInRole("Admin") && User.Identity.GetUserId() == userId)
+            {
+                AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            }
+            if ((User.IsInRole("Admin") && User.Identity.GetUserId() != userId) 
+                || (!User.IsInRole("Admin") && User.Identity.GetUserId() == userId))
+                await UserManager.DeleteAsync(UserManager.Users.SingleOrDefault(u => u.Id == userId));
+            return RedirectToAction(User.IsInRole("Admin") ? "Users" : "Index", "Forum");
+        }
+
         //
         // GET: /Account/ExternalLoginFailure
         [AllowAnonymous]

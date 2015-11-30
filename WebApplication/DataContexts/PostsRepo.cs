@@ -30,5 +30,11 @@ namespace WebApplication.DataContexts
 		{
 			return db.Posts.Where(x => x.ThreadId == threadId);
 		}
+
+	    public async Task DeletePost(int postId)
+	    {
+	        db.Posts.Remove(db.Posts.Find(postId));
+	        await db.SaveChangesAsync();
+	    }
 	}
 }

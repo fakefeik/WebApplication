@@ -36,5 +36,12 @@ namespace WebApplication.DataContexts
 	    {
 		    return db.Threads.Find(threadId);
 	    }
+
+        public async Task DeleteThread(int threadId)
+        {
+            db.Posts.RemoveRange(db.Posts.Where(p => p.ThreadId == threadId));
+            db.Threads.Remove(db.Threads.Find(threadId));
+            await db.SaveChangesAsync();
+        }
     }
 }

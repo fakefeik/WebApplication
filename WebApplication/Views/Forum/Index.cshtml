@@ -8,7 +8,16 @@
 
 @foreach (var b in Model)
 {
-    <a href="@Url.Action("Board", "Forum", new {boardId = b.ShortName})">@string.Format("/{0}/ - {1}", b.ShortName, b.Name)</a><br/>
+    <a href="@Url.Action("Board", "Forum", new {boardId = b.ShortName})">@string.Format("/{0}/ - {1}", b.ShortName, b.Name)</a>
+    if (User.IsInRole("Admin"))
+    {
+        using (Html.BeginForm("DeleteBoard", "Forum", FormMethod.Post))
+        {
+            <input class="form-control" type="hidden" name="boardId" value="@b.ShortName" />
+            <input class="btn btn-danger" type="submit" value="Удалить"/>
+        }
+    }
+    <br/>
 }
 
 @if (User.IsInRole("Admin"))

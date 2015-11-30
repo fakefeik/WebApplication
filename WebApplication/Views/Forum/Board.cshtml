@@ -14,13 +14,21 @@
         continue;
     }
     var threadStart = t.Posts.First();
-    <div class="list-group-item clickable" data-link="@Url.Action("Thread", "Forum", new { threadId = t.Id })">
-        <p>@threadStart.Username</p>
+    <div class="list-group-item clickable" data-link="@Url.Action("Thread", "Forum", new {threadId = t.Id})">
+        <p>@(threadStart.Username ?? "DELETED")</p>
         <p>@threadStart.Id</p>
         <p>@threadStart.Timestamp</p>
         <p>@threadStart.Topic</p>
         <p>@threadStart.Text</p>
     </div>
+    if (User.IsInRole("Admin"))
+    {
+        using (Html.BeginForm("DeleteThread", "Forum", FormMethod.Post))
+        {
+            <input type="hidden" name="threadId" value="@t.Id"/>
+            <input class="btn btn-danger" type="submit" value="Удалить" />
+        }
+    }
 }
 <hr/>
 @if (User.Identity.IsAuthenticated)

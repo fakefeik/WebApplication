@@ -1,4 +1,5 @@
-﻿@model WebApplication.Models.ThreadModel
+﻿@using Microsoft.AspNet.Identity
+@model WebApplication.Models.ThreadModel
 
 @{
     var firstMessage = Model.Posts.First();
@@ -13,12 +14,29 @@
     @Html.Raw(p.Index == 0
         ? "<div class='list-group-item list-group-item-head clickable' data-link='#'>"
         : "<div class='list-group-item clickable' data-link='#'>")
-    <p>@p.Post.Username</p>
+    <p>@(p.Post.Username ?? "DELETED")</p>
     <p>@p.Post.Id</p>
     <p>@p.Post.Timestamp</p>
     <p>@p.Post.Topic</p>
     <p>@p.Post.Text</p>
 	@Html.Raw("</div>")
+    if (User.IsInRole("Admin") && p.Index == 0)
+    {
+        using (Html.BeginForm("DeleteThread", "Forum", FormMethod.Post))
+        {
+            <input type="hidden" name="threadId" value="@p.Post.ThreadId" />
+            <input class="btn btn-danger" type="submit" value="Удалить" />
+        }
+    }
+    if ((User.Identity.GetUserId() == p.Post.UserId || User.IsInRole("Admin")) && p.Index != 0)
+    {
+        using (Html.BeginForm("DeletePost", "Forum", FormMethod.Post))
+        {
+            <input type="hidden" name="threadId" value="@p.Post.ThreadId" />
+            <input type="hidden" name="postId" value="@p.Post.Id" />
+            <input class="btn btn-danger" type="submit" value="Удалить" />
+        }
+    }
 }
 
 @if (User.Identity.IsAuthenticated)

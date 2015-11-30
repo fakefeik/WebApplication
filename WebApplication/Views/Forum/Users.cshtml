@@ -1,0 +1,19 @@
+﻿@using Microsoft.AspNet.Identity
+@model IQueryable<WebApplication.Models.ApplicationUser>
+
+@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/Shared/_ForumLayout.cshtml";
+}
+
+@foreach (var user in Model)
+{
+    <p>
+        @user.Id: @user.Email
+        @using (Html.BeginForm("DeleteUser", "Account", FormMethod.Post))
+        {
+            <input type="hidden" name="userId" value="@user.Id"/>
+            <input class="btn btn-danger" type="submit" value="Удалить"/>
+        }
+    </p>
+}
