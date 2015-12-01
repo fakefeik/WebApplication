@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -84,6 +85,15 @@ namespace WebApplication.Controllers
             return true;
         }
 
+        [HttpPost]
+        public ActionResult GetNewPosts(int threadId, int currentCount)
+        {
+            var posts = _posts.GetPosts(threadId).ToList();
+            if (posts.Count == currentCount)
+                return Json(new PostModel[0]);
+            return Json(posts.Skip(currentCount));
+        }
+        
         [HttpPost]
         [Authorize]
         public async Task<ActionResult> AddThread(string boardId, string name, string text)

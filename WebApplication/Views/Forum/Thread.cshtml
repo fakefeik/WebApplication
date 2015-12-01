@@ -3,8 +3,8 @@
 
 @{
     var firstMessage = Model.Posts.First();
-	ViewBag.Title = @Model.BoardName + " - " +  firstMessage.Topic;
-	Layout = "~/Views/Shared/_ForumLayout.cshtml";
+    ViewBag.Title = @Model.BoardName + " - " +  firstMessage.Topic;
+    Layout = "~/Views/Shared/_ForumLayout.cshtml";
 }
 
 <a href="@Url.Action("Board", new {boardId = Model.BoardId})">Back</a>
@@ -12,14 +12,14 @@
 @foreach (var p in Model.Posts.Select((e, i) => new {Index = i, Post = e}))
 {
     @Html.Raw(p.Index == 0
-        ? "<div class='list-group-item list-group-item-head clickable' data-link='#'>"
-        : "<div class='list-group-item clickable' data-link='#'>")
+        ? "<div class='post list-group-item list-group-item-head clickable' data-link='#'>"
+        : "<div class='post list-group-item clickable' data-link='#'>")
     <p>@(p.Post.Username ?? "DELETED")</p>
     <p>@p.Post.Id</p>
     <p>@p.Post.Timestamp</p>
     <p>@p.Post.Topic</p>
     <p>@p.Post.Text</p>
-	@Html.Raw("</div>")
+    @Html.Raw("</div>")
     if (User.IsInRole("Admin") && p.Index == 0)
     {
         using (Html.BeginForm("DeleteThread", "Forum", FormMethod.Post))
@@ -39,6 +39,8 @@
     }
 }
 
+<div id="refresh" class="clickable" data-link="#" data-url="@Url.Action("GetNewPosts")" data-thread-id="@Model.Id">kek</div>
+
 @if (User.Identity.IsAuthenticated)
 {
     using (Html.BeginForm("AddPost", "Forum", FormMethod.Post))
@@ -55,4 +57,8 @@
         <br/>
         <input class="btn btn-success" type="submit"/>
     }
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/forum/js")
 }

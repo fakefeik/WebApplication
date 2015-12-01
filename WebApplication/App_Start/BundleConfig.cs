@@ -39,6 +39,9 @@ namespace WebApplication
 
             bundles.Add(new ScriptBundle("~/bundles/gallery/js").Include(
                       "~/Scripts/gallery.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/forum/js").Include(
+                      "~/Scripts/ajax-update-thread.js"));
         }
     }
 }
