@@ -161,6 +161,11 @@ namespace WebApplication.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+            if (!this.CheckCaptcha())
+            {
+                return RedirectToAction("Register");
+            }
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Username, Email = model.Email };
