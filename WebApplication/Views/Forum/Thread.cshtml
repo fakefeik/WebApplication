@@ -14,34 +14,42 @@
     @Html.Raw(p.Index == 0
         ? "<div class='post list-group-item list-group-item-head clickable' data-link='#'>"
         : "<div class='post list-group-item clickable' data-link='#'>")
-    <p>@(p.Post.Username ?? "DELETED")</p>
-    <p>@p.Post.Id</p>
-    <p>@p.Post.Timestamp</p>
-    <p>@p.Post.Topic</p>
+    <div class="head-container">
+        <h2 class="left-side">@p.Post.Topic</h2>
+        <div class="right-side">
+            <p>@(p.Post.Username ?? "DELETED")</p>
+            <p>@p.Post.Timestamp</p>
+        </div>
+    </div>
+    <hr/>
     <p>@p.Post.Text</p>
-    @Html.Raw("</div>")
     if (User.IsInRole("Admin") && p.Index == 0)
     {
+        <hr />
         using (Html.BeginForm("DeleteThread", "Forum", FormMethod.Post))
         {
+
             <input type="hidden" name="threadId" value="@p.Post.ThreadId" />
-            <input class="btn btn-danger" type="submit" value="Удалить" />
+            <input class="btn btn-danger bottom-right" type="submit" value="Удалить" />
         }
     }
     if ((User.Identity.GetUserId() == p.Post.UserId || User.IsInRole("Admin")) && p.Index != 0)
     {
+        <hr/>
         using (Html.BeginForm("DeletePost", "Forum", FormMethod.Post))
         {
+
             <input type="hidden" name="threadId" value="@p.Post.ThreadId" />
             <input type="hidden" name="postId" value="@p.Post.Id" />
-            <input class="btn btn-danger" type="submit" value="Удалить" />
+            <input class="btn btn-danger bottom-right" type="submit" value="Удалить" />
         }
     }
+    @Html.Raw("</div>")
 }
 
-<div id="refresh" class="clickable" data-link="#" data-url="@Url.Action("GetNewPosts")" data-thread-id="@Model.Id">kek</div>
+<div id="refresh" data-url="@Url.Action("GetNewPosts")" data-thread-id="@Model.Id"></div>
 
-@if (User.Identity.IsAuthenticated)
+@if (User.IsInRole("Admin") || User.IsInRole("User"))
 {
     using (Html.BeginForm("AddPost", "Forum", FormMethod.Post))
     {

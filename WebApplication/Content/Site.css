@@ -28,5 +28,20 @@ textarea {
 }
 
 .list-group-item-head {
-	background-color: #c0c0c0;
+	background-color: #f8f8f8;
+}
+
+.right-side {
+    float: right;
+    width: 30%;
+    text-align: right;
+}
+
+.left-side {
+    float: left;
+    width: 70%;
+}
+
+hr {
+    clear: both;
 }

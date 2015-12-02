@@ -1,6 +1,6 @@
-﻿$(document).ready(function () {
+﻿$(document).ready(function() {
     var refreshButton = $("#refresh");
-    refreshButton.click(function () {
+    var interval = setInterval(function () {
         $.ajax({
             type: "POST",
             url: refreshButton.data("url"),
@@ -9,18 +9,28 @@
                 currentCount: $(".post").length
             }
         }).success(function (ans) {
-            for (var i = 0; i < ans.length; i++) {
+            console.log(ans);
+            for (var i = 0; i < ans.Posts.length; i++)
                 $(".post").last().after(
                     "<div class='post list-group-item clickable' data-link='#'>" +
-                        "<p>" + (ans[i].Username === undefined ? "DELETED" : ans[i].Username) + "</p>" +
-                        "<p>" + ans[i].Id +  "</p>" +
-                        "<p>" + ans[i].Timestamp + "</p>" +
-                        "<p>" + ans[i].Topic + "</p>" +
-                        "<p>" + ans[i].Text + "</p>" +
+                        "<div class='head-container'>" +
+                            "<h2 class='left-side'>" + ans.Posts[i].Topic + "</h2>" +
+                            "<div class='right-side'>" +
+                                "<p>" + (ans.Posts[i].Username == null ? "DELETED" : ans.Posts[i].Username) + "</p>" +
+                                "<p>" + ans.Posts[i].Timestamp + "</p>" +
+                            "</div>" +
+                        "</div>" +
+                        "<hr/>" +
+                        "<p>" + ans.Posts[i].Text + "</p>" +
+                        (ans.Posts[i].UserId === ans.UserId || ans.IsAdmin ? "<hr/>" +
+                        "<form action='" + ans.DeleteUrl + "' method='post'>" +
+                            "<input type='hidden' name='threadId' value='" + ans.Posts[i].ThreadId + "'>" +
+                            "<input type='hidden' name='postId' value='" + ans.Posts[i].Id + "'>" +
+                            "<input class='btn btn-danger' type='submit' value='Удалить'>" +
+                        "</form>"
+                        : "") +
                     "</div>"
                 );
-            }
-            console.log(ans);
         });
-    });
+    }, 10000);
 });

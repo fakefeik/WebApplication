@@ -14,24 +14,32 @@
         continue;
     }
     var threadStart = t.Posts.First();
+    var messagesCount = t.Posts.Count();
     <div class="list-group-item clickable" data-link="@Url.Action("Thread", "Forum", new {threadId = t.Id})">
-        <p>@(threadStart.Username ?? "DELETED")</p>
-        <p>@threadStart.Id</p>
-        <p>@threadStart.Timestamp</p>
-        <p>@threadStart.Topic</p>
+        <div class="head-container">
+            <h2 class="left-side">@threadStart.Topic</h2>
+            <div class="right-side">
+                <p>@(threadStart.Username ?? "DELETED")</p>
+                <p>@threadStart.Timestamp</p>
+            </div>
+        </div>
+        <hr />
         <p>@threadStart.Text</p>
-    </div>
-    if (User.IsInRole("Admin"))
-    {
-        using (Html.BeginForm("DeleteThread", "Forum", FormMethod.Post))
+        <em>(@messagesCount @(messagesCount == 1 ? "message" : "messages"))</em>
+        <hr/>
+        @if (User.IsInRole("Admin"))
         {
-            <input type="hidden" name="threadId" value="@t.Id"/>
-            <input class="btn btn-danger" type="submit" value="Удалить" />
+            using (Html.BeginForm("DeleteThread", "Forum", FormMethod.Post))
+            {
+                <input type="hidden" name="threadId" value="@t.Id"/>
+                <input class="btn btn-danger" type="submit" value="Удалить"/>
+            }
         }
-    }
+    </div>
+
 }
 <hr/>
-@if (User.Identity.IsAuthenticated)
+@if (User.IsInRole("Admin") || User.IsInRole("User"))
 {
     using (Html.BeginForm("AddThread", "Forum", FormMethod.Post))
     {

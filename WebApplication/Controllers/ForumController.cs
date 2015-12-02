@@ -57,8 +57,10 @@ namespace WebApplication.Controllers
         [Authorize]
         public async Task<ActionResult> DeletePost(int threadId, int postId)
         {
-            await _posts.DeletePost(postId);
-            return RedirectToAction("Thread", new {threadId = threadId});
+            var post = _posts.GetPost(postId);
+            if (User.IsInRole("Admin") || post.UserId == User.Identity.GetUserId())
+                await _posts.DeletePost(postId);
+            return RedirectToAction("Thread", new { threadId = threadId });
         }
 
         private bool CheckCaptcha()
@@ -90,8 +92,32 @@ namespace WebApplication.Controllers
         {
             var posts = _posts.GetPosts(threadId).ToList();
             if (posts.Count == currentCount)
-                return Json(new PostModel[0]);
-            return Json(posts.Skip(currentCount));
+                return Json(new
+                {
+                    Posts = new PostModel[0],
+                    IsAdmin = User.IsInRole("Admin"),
+                    UserId = User.Identity.GetUserId(),
+                    DeleteUrl = Url.Action("DeletePost")
+                });
+            return Json(new
+            {
+                Posts = posts.Skip(currentCount).Select(p => new
+                {
+                    UserId = p.UserId,
+                    Username = UserManager.Users
+                        .ToList()
+                        .FirstOrDefault(u => u.Id == p.UserId)
+                        ?.UserName,
+                    Id = p.Id,
+                    Timestamp = p.Timestamp.ToString(),
+                    Topic = p.Topic,
+                    Text = p.Text,
+                    ThreadId = p.ThreadId
+                }),
+                IsAdmin = User.IsInRole("Admin"),
+                UserId = User.Identity.GetUserId(),
+                DeleteUrl = Url.Action("DeletePost")
+            });
         }
         
         [HttpPost]
