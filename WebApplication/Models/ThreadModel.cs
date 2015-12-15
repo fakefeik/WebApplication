@@ -13,7 +13,7 @@ namespace WebApplication.Models
 
         public string BoardId { get; set; }
 
-	    public IEnumerable<PostModel> Posts;
-	    public string BoardName;
+        public IEnumerable<PostModel> Posts;
+        public string BoardName;
     }
 }

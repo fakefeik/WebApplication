@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Web;
+﻿using System.Net;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using WebApplication.Models;
 
-namespace WebApplication.Controllers
+namespace WebApplication
 {
-    public static class ControllerExtensions
+    public static class Extensions
     {
         public static bool CheckCaptcha(this Controller c)
         {
@@ -33,6 +29,11 @@ namespace WebApplication.Controllers
                 return false;
             }
             return true;
+        }
+
+        public static string ToHtmlString(this string s)
+        {
+            return MvcHtmlString.Create(s).ToString();
         }
     }
 }

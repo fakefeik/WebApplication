@@ -98,6 +98,7 @@ namespace WebApplication.Controllers
         
         [HttpPost]
         [Authorize]
+        [ValidateInput(false)]
         public async Task<ActionResult> AddThread(string boardId, string name, string text)
         {
             if (!this.CheckCaptcha() && !User.IsInRole("Admin"))
@@ -107,8 +108,8 @@ namespace WebApplication.Controllers
             await _posts.AddPost(new PostModel
             {
                 ThreadId = thread.Id,
-                Text = text,
-                Topic = name,
+                Text = text.ToHtmlString(),
+                Topic = name.ToHtmlString(),
                 Timestamp = DateTime.Now,
                 UserId = User.Identity.GetUserId()
             });
@@ -117,6 +118,7 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [Authorize]
+        [ValidateInput(false)]
         public async Task<ActionResult> AddPost(int threadId, string name, string text)
         {
             if (!this.CheckCaptcha() && !User.IsInRole("Admin"))
@@ -125,8 +127,8 @@ namespace WebApplication.Controllers
             await _posts.AddPost(new PostModel
             {
                 ThreadId = threadId,
-                Topic = name,
-                Text = text,
+                Topic = name.ToHtmlString(),
+                Text = text.ToHtmlString(),
                 Timestamp = DateTime.Now,
                 UserId = User.Identity.GetUserId()
             });

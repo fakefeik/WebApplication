@@ -15,6 +15,6 @@ namespace WebApplication.Models
         [StringLength(32)]
         public string Name { get; set; }
 
-	    public IEnumerable<ThreadModel> Threads;
+        public IEnumerable<ThreadModel> Threads;
     }
 }

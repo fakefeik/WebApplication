@@ -32,10 +32,10 @@ namespace WebApplication.DataContexts
             return db.Threads.Where(x => x.BoardId == boardId);
         }
 
-	    public ThreadModel GetThread(int threadId)
-	    {
-		    return db.Threads.Find(threadId);
-	    }
+        public ThreadModel GetThread(int threadId)
+        {
+            return db.Threads.Find(threadId);
+        }
 
         public async Task DeleteThread(int threadId)
         {
